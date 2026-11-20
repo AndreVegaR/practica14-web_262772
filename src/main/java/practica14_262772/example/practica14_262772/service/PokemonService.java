@@ -2,6 +2,7 @@ package practica14_262772.example.practica14_262772.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import practica14_262772.example.practica14_262772.exception.ResourceNotFoundException;
 import practica14_262772.example.practica14_262772.model.Pokemon;
 import practica14_262772.example.practica14_262772.repository.PokemonRepository;
 import java.util.List;
@@ -31,6 +32,9 @@ public class PokemonService {
      * @return el pokemon
      */
     public Optional<Pokemon> obtenerPorId(Long id) {
+        if (!pokemonRepository.existsById(id)) {
+            throw excepcion("Pokemon no encontrado para eliminar: " + id);
+        }
         return pokemonRepository.findById(id);
     }
 
@@ -54,6 +58,9 @@ public class PokemonService {
      * @return el pokemon actualizado
      */
     public Optional<Pokemon> actualizarCompleto(Long id, Pokemon pokemon) {
+        if (!pokemonRepository.existsById(id)) {
+            throw excepcion("Pokemon no encontrado para eliminar: " + id);
+        }
         return pokemonRepository.findById(id).map(pokemonExistente -> {
             pokemonExistente.setNombre(pokemon.getNombre());
             pokemonExistente.setTipo(pokemon.getTipo());
@@ -75,6 +82,9 @@ public class PokemonService {
      * @return el pokemon actualizado
      */
     public Optional<Pokemon> actualizarParcial(Long id, Pokemon pokemon) {
+        if (!pokemonRepository.existsById(id)) {
+            throw excepcion("Pokemon no encontrado para eliminar: " + id);
+        }
         return pokemonRepository.findById(id).map(pokemonExistente -> {
             if (pokemon.getNombre() != null) {
                 pokemonExistente.setNombre(pokemon.getNombre());
@@ -109,10 +119,14 @@ public class PokemonService {
      * @return el pokemon eliminado
      */
     public boolean eliminar(Long id) {
-        if (pokemonRepository.existsById(id)) {
-            pokemonRepository.deleteById(id);
-            return true;
+        if (!pokemonRepository.existsById(id)) {
+            throw excepcion("Pokemon no encontrado para eliminar: " + id);
         }
-        return false;
+        pokemonRepository.deleteById(id);
+        return true;
+    }
+
+    private ResourceNotFoundException excepcion(String mensaje) {
+        return new ResourceNotFoundException(mensaje);
     }
 }

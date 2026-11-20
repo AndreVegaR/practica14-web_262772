@@ -1,5 +1,6 @@
 package practica14_262772.example.practica14_262772.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import practica14_262772.example.practica14_262772.model.Pokemon;
@@ -45,7 +46,7 @@ public class PokemonController {
      * @return el pokemon creado
      */
     @PostMapping
-    public Pokemon crear(@RequestBody Pokemon pokemon) {
+    public Pokemon crear(@Valid @RequestBody Pokemon pokemon) {
         return pokemonService.crear(pokemon);
     }
 
@@ -58,7 +59,7 @@ public class PokemonController {
      * @return el pokemon actualizado
      */
     @PutMapping("/{id}")
-    public Optional<Pokemon> actualizarCompleto(@PathVariable Long id, @RequestBody Pokemon pokemon) {
+    public Optional<Pokemon> actualizarCompleto(@PathVariable Long id, @Valid @RequestBody Pokemon pokemon) {
         return pokemonService.actualizarCompleto(id, pokemon);
     }
 
